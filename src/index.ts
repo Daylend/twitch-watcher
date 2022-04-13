@@ -1,12 +1,10 @@
 import tmi from 'tmi.js';
 import * as dotenv from 'dotenv';
 import partners from './partners.json';
-import { Watcher, BuffWatcher } from './watchers';
+import { Watcher, BuffWatcher, GiveawayWatcher } from './watchers';
+import { Client, Intents } from 'discord.js';
 
 dotenv.config({ override: false });
-
-const client_id = process.env.TWITCH_CLIENT_ID ?? '';
-const client_secret = process.env.TWITCH_CLIENT_SECRET ?? '';
 
 const test_channels = [
   'daylend',
@@ -21,23 +19,33 @@ const partner_channels: string[] = partners.reduce((results: any, partner) => {
   return results;
 }, []);
 
-const twitchClient = new tmi.Client({
-  options: { debug: false, joinInterval: 300 },
-  channels: test_channels
-});
-
-const plugins: Watcher[] = [
-  new BuffWatcher()
-]
-
 async function main() {
-  await twitchClient.connect();
+  const twitchClient = new tmi.Client({
+    options: { debug: false, joinInterval: 300 },
+    channels: test_channels
+  });
+  
+  const discordClient = new Client({ intents: [Intents.FLAGS.DIRECT_MESSAGES]});
+
+  await Promise.all([
+    await twitchClient.connect(),
+    discordClient.once('ready', () => {
+      console.log('Discord initialized');
+    })]
+  );
+
+  discordClient.login(process.env.DISCORD_TOKEN);
+
+  const plugins: Watcher[] = [
+    new BuffWatcher(discordClient),
+    new GiveawayWatcher()
+  ]
   
   twitchClient.on('message', (channel, userstate, message, self) => {
     if (self) return;
 
     plugins.forEach(async (plugin) => {
-      plugin.message(channel, userstate, message, self);
+      await plugin.message(channel, userstate, message, self);
     });
   });
 }
