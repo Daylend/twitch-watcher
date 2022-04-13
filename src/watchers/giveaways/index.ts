@@ -6,11 +6,6 @@ const RESET_INTERVAL = 1000 * 60 * 1;
 const CHANNEL_RESET_INTERVAL = 1000 * 60 * 5;
 const COUNT_THRESHOLD = 2;
 
-interface MessageCount {
-  channels: string[];
-  count: number;
-}
-
 export class GiveawayWatcher implements Watcher {
   discord?: DiscordClient;
   startTime: number;
