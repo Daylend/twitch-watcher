@@ -6,6 +6,11 @@ const RESET_INTERVAL = 1000 * 60 * 1;
 const CHANNEL_RESET_INTERVAL = 1000 * 60 * 5;
 const COUNT_THRESHOLD = 2;
 
+interface MessageCount {
+  channels: string[];
+  count: number;
+}
+
 export class GiveawayWatcher implements Watcher {
   discord?: DiscordClient;
   startTime: number;
@@ -38,15 +43,17 @@ export class GiveawayWatcher implements Watcher {
       return;
     }
 
+    const key = `${channel}:${message}`;
+
     // Filter on prefix
     if (prefixes.some((prefix) => {
       return message.startsWith(prefix);      
     })) {
-      if (message in this.messages){
-        if (++this.messages[message] >= COUNT_THRESHOLD) {
+      if (key in this.messages){
+        if (++this.messages[key] >= COUNT_THRESHOLD) {
           // If unseen or it's been longer than the cooldown
           if (!(channel in this.alertedChannels)) {
-            this.alertedChannels[channel] = Date.now();
+            this.alertedChannels[key] = Date.now();
             this.notify(`[${channel}]\t${message}`);
           } else if (Date.now() - this.alertedChannels[channel] > CHANNEL_RESET_INTERVAL) {
             this.alertedChannels[channel] = Date.now();
@@ -55,7 +62,7 @@ export class GiveawayWatcher implements Watcher {
         }
       }
       else {
-        this.messages[message] = 1;
+        this.messages[key] = 1;
       }
     }
   }
