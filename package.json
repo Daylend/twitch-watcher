@@ -11,6 +11,7 @@
     "@tsconfig/node17": "^1.0.0",
     "@types/node": "^17.0.23",
     "@types/tmi.js": "^1.8.1",
+    "discord.js": "^13.6.0",
     "dotenv": "^16.0.0",
     "node-fetch": "^3.2.3",
     "node-twitch": "^0.4.5",
