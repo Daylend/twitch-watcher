@@ -27,19 +27,20 @@ async function main() {
   
   const discordClient = new Client({ intents: [Intents.FLAGS.DIRECT_MESSAGES]});
 
-  await Promise.all([
-    await twitchClient.connect(),
-    discordClient.once('ready', () => {
-      console.log('Discord initialized');
-    })]
-  );
+  await twitchClient.connect();
 
-  discordClient.login(process.env.DISCORD_TOKEN);
+  console.log('🟪 Twitch initialized');
+
+  await discordClient.login(process.env.DISCORD_TOKEN);
+
+  console.log('🟦 Discord initialized');
 
   const plugins: Watcher[] = [
     new BuffWatcher(discordClient),
-    new GiveawayWatcher()
+    new GiveawayWatcher(discordClient)
   ]
+
+  console.log('🔑 Plugins initialized')
   
   twitchClient.on('message', (channel, userstate, message, self) => {
     if (self) return;
@@ -48,6 +49,8 @@ async function main() {
       await plugin.message(channel, userstate, message, self);
     });
   });
+
+  console.log('👂 Now listening!');
 }
 
 main();

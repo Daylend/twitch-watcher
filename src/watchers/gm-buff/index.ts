@@ -29,7 +29,7 @@ export class BuffWatcher implements Watcher {
 
     const user = await this.discord.users.fetch('113156025984520192');
     try {
-      user.send(`GM BUFF: ${message}`);
+      user.send(`GM BUFF:\t${message}`);
     }
     catch (err) {
       console.log(err);
