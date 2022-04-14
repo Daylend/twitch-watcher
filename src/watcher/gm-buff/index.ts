@@ -13,8 +13,8 @@ const mainMatchers = [
 ]
 
 const contextMatchers = [
-  /drop rate/,
-  /buff/,
+  /drop rate/gim,
+  /buff/gim,
 ]
 
 export class BuffWatcher implements Watcher {
@@ -38,6 +38,7 @@ export class BuffWatcher implements Watcher {
 
   async message(channel: string, userstate: any, message: string, self: boolean) {
     const username = userstate['username'].toLowerCase();
+    if (username==='daylend') return;
   
     // Look for more context if they're not a GM
     if (matchesPatterns(message, mainMatchers, contextMatchers)) {

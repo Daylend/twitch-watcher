@@ -1,7 +1,7 @@
 import tmi from 'tmi.js';
 import * as dotenv from 'dotenv';
 import partners from './partners.json';
-import { Watcher, BuffWatcher, GiveawayWatcher } from './watchers';
+import { Watcher, BuffWatcher, GiveawayWatcher, MentionWatcher } from './watcher';
 import { Client, Intents } from 'discord.js';
 
 dotenv.config({ override: false });
@@ -22,7 +22,7 @@ const partner_channels: string[] = partners.reduce((results: any, partner) => {
 async function main() {
   const twitchClient = new tmi.Client({
     options: { debug: false, joinInterval: 300 },
-    channels: test_channels
+    channels: partner_channels
   });
   
   const discordClient = new Client({ intents: [Intents.FLAGS.DIRECT_MESSAGES]});
@@ -37,7 +37,8 @@ async function main() {
 
   const plugins: Watcher[] = [
     new BuffWatcher(discordClient),
-    new GiveawayWatcher(discordClient)
+    new GiveawayWatcher(discordClient),
+    new MentionWatcher(discordClient)
   ]
 
   console.log('🔑 Plugins initialized')

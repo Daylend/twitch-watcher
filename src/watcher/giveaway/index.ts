@@ -4,7 +4,7 @@ import { Client as DiscordClient } from 'discord.js';
 const prefixes = ['!'];
 const RESET_INTERVAL = 1000 * 60 * 1;
 const CHANNEL_RESET_INTERVAL = 1000 * 60 * 5;
-const COUNT_THRESHOLD = 2;
+const COUNT_THRESHOLD = 20;
 
 export class GiveawayWatcher implements Watcher {
   discord?: DiscordClient;
@@ -48,7 +48,7 @@ export class GiveawayWatcher implements Watcher {
         if (++this.messages[key] >= COUNT_THRESHOLD) {
           // If unseen or it's been longer than the cooldown
           if (!(channel in this.alertedChannels)) {
-            this.alertedChannels[key] = Date.now();
+            this.alertedChannels[channel] = Date.now();
             this.notify(`[${channel}]\t${message}`);
           } else if (Date.now() - this.alertedChannels[channel] > CHANNEL_RESET_INTERVAL) {
             this.alertedChannels[channel] = Date.now();

@@ -7,4 +7,5 @@ export declare class Watcher {
 }
 
 export * from './gm-buff';
-export * from './giveaways';
+export * from './giveaway';
+export * from './mention';
