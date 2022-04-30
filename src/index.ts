@@ -6,6 +6,8 @@ import { Client, Intents } from 'discord.js';
 
 dotenv.config({ override: false });
 
+const debug = true;
+
 const test_channels = [
   'daylend',
   'sofrosty'
@@ -22,7 +24,7 @@ const partner_channels: string[] = partners.reduce((results: any, partner) => {
 async function main() {
   const twitchClient = new tmi.Client({
     options: { debug: false, joinInterval: 300 },
-    channels: partner_channels
+    channels: debug ? test_channels : partner_channels
   });
   
   const discordClient = new Client({ intents: [Intents.FLAGS.DIRECT_MESSAGES]});
