@@ -6,7 +6,7 @@ import { Client, Intents } from 'discord.js';
 
 dotenv.config({ override: false });
 
-const debug = true;
+const debug = false;
 
 const test_channels = [
   'daylend',

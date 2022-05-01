@@ -35,12 +35,16 @@ export class BuffWatcher implements Watcher {
   private async notify(message:string) {
     if (!this.discord) return;
 
-    // const user = await this.discord.users.fetch('113156025984520192');
-    const guild = await this.discord.guilds.fetch(discord_guild_id);
-    const channel = await guild.channels.fetch(discord_channel_id) as TextChannel;
-
     try {
-      channel.send(`**${(message.toUpperCase().match(mainMatchers[0]) as RegExpMatchArray)[0]}**`);
+      // const user = await this.discord.users.fetch('113156025984520192');
+      const guild = await this.discord.guilds.fetch(discord_guild_id);
+      const channel = await guild.channels.fetch(discord_channel_id) as TextChannel;
+
+      const avatar = 'https://bdocodex.com/items/new_icon/03_etc/00015993.png';
+      const hook = await channel.createWebhook('GM-Buff', { avatar, reason: 'Should be automatically deleted'});
+      await hook.send(`**${(message.toUpperCase().match(mainMatchers[0]) as RegExpMatchArray)[0]}**`)
+      await hook.delete();
+
       this.lastNotifyTimestamp = Date.now();
     }
     catch (err) {
